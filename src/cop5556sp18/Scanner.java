@@ -717,7 +717,7 @@ public class Scanner {
                             state = State.START;
                         }
                     }
-                }	// case HAS_COLON
+                }    // case HAS_COLON
                 break;
                 case HAS_EQUAL: {
                     switch (ch) {
@@ -731,7 +731,7 @@ public class Scanner {
                             error(startPos, line(startPos), posInLine(startPos), "Illegal Character");
                         }
                     }
-                }	//case HAS_EQUAL
+                }    //case HAS_EQUAL
                 break;
                 case HAS_TIMES: {
                     switch (ch) {
@@ -746,7 +746,7 @@ public class Scanner {
                             state = State.START;
                         }
                     }
-                }	// case HAS_TIMES
+                }    // case HAS_TIMES
                 break;
                 case HAS_DIV: {
                     switch (ch) {
@@ -760,7 +760,7 @@ public class Scanner {
                             state = State.START;
                         }
                     }
-                }	//case HAS_DIV
+                }    //case HAS_DIV
                 break;
                 case HAS_DOT: {
                     if (Character.isDigit(ch)) {
@@ -774,7 +774,7 @@ public class Scanner {
                             error(startPos, line(startPos), posInLine(startPos), "Float value not in range");
                         }
                     }
-                }	//case HAS_DOT
+                }    //case HAS_DOT
                 break;
                 case COMMENT_OPEN: {
                     while ((chars[pos] != '*' || chars[pos + 1] != '/') && chars[pos] != EOFChar) {
@@ -795,7 +795,7 @@ public class Scanner {
                             state = State.START;
                         }
                     }
-                }	//case COMMENT_OPEN
+                }    //case COMMENT_OPEN
                 break;
                 case COMMENT_CLOSE: {
                     switch (ch) {
@@ -813,7 +813,7 @@ public class Scanner {
                             error(startPos, line(startPos), posInLine(startPos), "Invalid comment Syntax is /*<comments>*/");
                         }
                     }
-                }	//case COMMENT_CLOSE
+                }    //case COMMENT_CLOSE
                 break;
                 case HAS_EXCLAM: {
                     switch (ch) {
@@ -828,7 +828,7 @@ public class Scanner {
                             state = State.START;
                         }
                     }
-                }	//case HAS_EXCLAM
+                }    //case HAS_EXCLAM
                 break;
                 case HAS_ZERO: {
                     switch (ch) {
@@ -842,7 +842,7 @@ public class Scanner {
                             state = State.START;
                         }
                     }
-                }	//case HAS_ZERO
+                }    //case HAS_ZERO
                 break;
                 default: {
                     error(pos, 0, 0, "undefined state");
