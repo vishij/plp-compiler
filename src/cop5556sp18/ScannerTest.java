@@ -926,7 +926,7 @@ public class ScannerTest {
         show(scanner);
         checkNextIsEOF(scanner);
     }
-    
+
     @Test
     public void testInvalidComment() throws LexicalException {
         String input = "/*/*";
@@ -958,7 +958,7 @@ public class ScannerTest {
         show(scanner);
         checkNextIsEOF(scanner);
     }
-    
+
     @Test
     public void testCommentWithNextLine() throws LexicalException {
         String input = "/**\n*/*abc";
@@ -969,7 +969,7 @@ public class ScannerTest {
         checkNext(scanner, IDENTIFIER, 7, 3, 2, 4);
         checkNextIsEOF(scanner);
     }
-    
+
     @Test
     public void testNestedComment() throws LexicalException {
         String input = "/*/**/*/";
@@ -980,7 +980,7 @@ public class ScannerTest {
         checkNext(scanner, OP_DIV, 7, 1, 1, 8);
         checkNextIsEOF(scanner);
     }
-    
+
     @Test
     public void testNestedComment2() throws LexicalException {
         String input = "/**/**/*/";
