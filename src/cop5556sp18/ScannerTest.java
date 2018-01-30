@@ -880,7 +880,7 @@ public class ScannerTest {
         checkNext(scanner, FLOAT_LITERAL, 1, 2, 1, 2);
         checkNextIsEOF(scanner);
     }
-    
+
     @Test
     public void testFloatDot() throws LexicalException {
         String input = ".333.";

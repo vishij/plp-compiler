@@ -22,7 +22,7 @@ public class Scanner {
     private static final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz$_";
     private static final String NON_ZERO_DIGITS = "123456789";
     private static final String ZERO = "0";
-    
+
     @SuppressWarnings("serial")
     public static class LexicalException extends Exception {
 
@@ -917,17 +917,6 @@ public class Scanner {
             sb.append(i).append(' ').append(lineStarts[i]).append('\n');
         }
         return sb.toString();
-    }
-
-    public boolean isIdentifierPart(char ch) {
-        return (ALPHABET.indexOf(ch) != -1);
-    }
-
-    public boolean isIntegerLiteral(char ch) {
-        if ((NON_ZERO_DIGITS.indexOf(ch) == -1) || (ZERO.indexOf(ch) == -1))
-            return false;
-        else
-            return true;
     }
 
 }
