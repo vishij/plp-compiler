@@ -46,7 +46,7 @@ public class Scanner {
         KW_polar_a/* polar_a*/, KW_polar_r/* polar_r*/, KW_abs/* abs */, KW_sin/* sin*/, KW_cos/* cos */,
         KW_atan/* atan */, KW_log/* log */, KW_image/* image */, KW_int/* int */, KW_float /* float */,
         KW_boolean/* boolean */, KW_filename/* filename */, KW_red /* red */, KW_blue /* blue */,
-        KW_green /* green */, KW_alpha /* alpha*/, KW_while /* while */, KW_if /* if */, OP_ASSIGN/* := */,
+        KW_green /* green */, KW_alpha /* alpha*/, KW_while /* while */, KW_if /* if */, KW_sleep /* sleep */, OP_ASSIGN/* := */,
         OP_EXCLAMATION/* ! */, OP_QUESTION/* ? */, OP_COLON/* : */, OP_EQ/* == */, OP_NEQ/* != */,
         OP_GE/* >= */, OP_LE/* <= */, OP_GT/* > */, OP_LT/* < */, OP_AND/* & */, OP_OR/* | */,
         OP_PLUS/* +*/, OP_MINUS/* - */, OP_TIMES/* * */, OP_DIV/* / */, OP_MOD/* % */, OP_POWER/* ** */,
@@ -618,6 +618,11 @@ public class Scanner {
                             break;
                             case "if": {
                                 tokens.add(new Token(Kind.KW_if, startPos, pos - startPos));
+                                state = State.START;
+                            }
+                            break;
+                            case "sleep": {
+                                tokens.add(new Token(Kind.KW_sleep, startPos, pos - startPos));
                                 state = State.START;
                             }
                             break;
