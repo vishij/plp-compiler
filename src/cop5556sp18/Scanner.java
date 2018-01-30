@@ -22,10 +22,7 @@ public class Scanner {
     private static final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz$_";
     private static final String NON_ZERO_DIGITS = "123456789";
     private static final String ZERO = "0";
-    private static final String BOOLEAN_TRUE = "true";
-    private static final String BOOLEAN_FALSE = "false";
-
-
+    
     @SuppressWarnings("serial")
     public static class LexicalException extends Exception {
 

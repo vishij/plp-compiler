@@ -880,6 +880,17 @@ public class ScannerTest {
         checkNext(scanner, FLOAT_LITERAL, 1, 2, 1, 2);
         checkNextIsEOF(scanner);
     }
+    
+    @Test
+    public void testFloatDot() throws LexicalException {
+        String input = ".333.";
+        Scanner scanner = new Scanner(input).scan();
+        show(input);
+        show(scanner);
+        checkNext(scanner, FLOAT_LITERAL, 0, 4, 1, 1);
+        checkNext(scanner, DOT, 4, 1, 1, 5);
+        checkNextIsEOF(scanner);
+    }
 
     @Test
     public void testFloatOutOfRange() throws LexicalException {
