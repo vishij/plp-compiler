@@ -1001,8 +1001,8 @@ public class ScannerTest {
             new Scanner(input).scan();
         } catch (LexicalException e) {
             show(e);
-            assertEquals(6, e.getPos()); //Check that exception occurred in the expected position
-            throw e;                    //Rethrow exception so JUnit will see it
+            assertEquals(6, e.getPos());
+            throw e;
         }
     }
 }
