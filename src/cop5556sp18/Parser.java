@@ -17,7 +17,7 @@ import cop5556sp18.Scanner.Token;
 
 import static cop5556sp18.Scanner.Kind.*;
 
-public class SimpleParser {
+public class Parser {
 
     @SuppressWarnings("serial")
     public static class SyntaxException extends Exception {
@@ -33,7 +33,7 @@ public class SimpleParser {
     Scanner scanner;
     Token t;
 
-    SimpleParser(Scanner scanner) {
+    Parser(Scanner scanner) {
         this.scanner = scanner;
         t = scanner.nextToken();
     }

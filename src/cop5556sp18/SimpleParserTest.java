@@ -14,7 +14,7 @@
 package cop5556sp18;
 
 import cop5556sp18.Scanner.LexicalException;
-import cop5556sp18.SimpleParser.SyntaxException;
+import cop5556sp18.Parser.SyntaxException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -37,11 +37,11 @@ public class SimpleParserTest {
     }
 
     // creates and returns a parser for the given input.
-    private SimpleParser makeParser(String input) throws LexicalException {
+    private Parser makeParser(String input) throws LexicalException {
         show(input); // Display the input
         Scanner scanner = new Scanner(input).scan(); // Create a Scanner and initialize it
         show(scanner); // Display the Scanner
-        SimpleParser parser = new SimpleParser(scanner);
+        Parser parser = new Parser(scanner);
         return parser;
     }
 
@@ -56,7 +56,7 @@ public class SimpleParserTest {
     @Test
     public void testEmpty() throws LexicalException, SyntaxException {
         String input = ""; // The input is the empty string.
-        SimpleParser parser = makeParser(input);
+        Parser parser = makeParser(input);
         thrown.expect(SyntaxException.class);
         parser.parse();
     }
@@ -70,7 +70,7 @@ public class SimpleParserTest {
     @Test
     public void testSmallest() throws LexicalException, SyntaxException {
         String input = "b{}";
-        SimpleParser parser = makeParser(input);
+        Parser parser = makeParser(input);
         parser.parse();
     }
 
@@ -80,7 +80,7 @@ public class SimpleParserTest {
     @Test
     public void testDec0() throws LexicalException, SyntaxException {
         String input = "b{int c;}";
-        SimpleParser parser = makeParser(input);
+        Parser parser = makeParser(input);
         parser.parse();
     }
 
@@ -89,7 +89,7 @@ public class SimpleParserTest {
         String input = "b{int c}";
         thrown.expect(SyntaxException.class);
         try {
-            SimpleParser parser = makeParser(input);
+            Parser parser = makeParser(input);
             parser.parse();
         } catch (SyntaxException e) {
             show(e);
@@ -104,7 +104,7 @@ public class SimpleParserTest {
                 + "image g[width(h),height(h)]; \n" + "int x; \n" + "x:=0; \n" + "while(x<width(g)){int y; \n"
                 + "y:=0; \n" + "while(y<height(g)){g[x,y]:=h[y,x]; \n" + "y:=y+1; \n" + "}; \n" + "x:=x+1; \n" + "}; \n"
                 + "show g; \n" + "sleep(4000); \n" + "}";
-        SimpleParser parser = makeParser(input);
+        Parser parser = makeParser(input);
         parser.parse();
     }
 
@@ -114,7 +114,7 @@ public class SimpleParserTest {
                 + "y := 0; \n" + "while (x < width(im)) { \n" + "y := 0; \n" + "while (y < height(im)) { \n"
                 + "im[x,y] := <<255,255,0,0>>; \n" + "y := y+1; \n" + "}; \n" + "x := x+1; \n" + "}; \n" + "show im; \n"
                 + "}";
-        SimpleParser parser = makeParser(input);
+        Parser parser = makeParser(input);
         parser.parse();
     }
 
@@ -125,7 +125,7 @@ public class SimpleParserTest {
                 + "float p; \n" + "p := polar_r[x,y]; \n" + "int r; \n" + "r := int(p) % Z; \n"
                 + "im[x,y] := <<Z, 0, 0, r>>; \n" + "y := y+1; \n" + "}; \n" + "x := x + 1; \n" + "}; \n"
                 + "show im; \n" + "}";
-        SimpleParser parser = makeParser(input);
+        Parser parser = makeParser(input);
         parser.parse();
     }
 
@@ -138,14 +138,14 @@ public class SimpleParserTest {
                 + "green(bird2[x,y]):=blue(bird[x,y]); \n" + "red(bird2[x,y]):=green(bird[x,y]); \n"
                 + "alpha(bird2[x,y]):=Z; \n" + "y:=y+1; \n" + "}; \n" + "x:=x+       1; \n" + "}; \n" + "show bird2; \n"
                 + "sleep(4000); \n" + "}";
-        SimpleParser parser = makeParser(input);
+        Parser parser = makeParser(input);
         parser.parse();
     }
 
     @Test
     public void testDeclaration() throws LexicalException, SyntaxException {
         String input = "ident { image boo; }";
-        SimpleParser parser = makeParser(input);
+        Parser parser = makeParser(input);
         parser.parse();
     }
 
@@ -154,7 +154,7 @@ public class SimpleParserTest {
         String input = "ident { image; }";
         thrown.expect(SyntaxException.class);
         try {
-            SimpleParser parser = makeParser(input);
+            Parser parser = makeParser(input);
             parser.parse();
         } catch (SyntaxException e) {
             show(e);
@@ -166,7 +166,7 @@ public class SimpleParserTest {
     @Test
     public void testDeclarations() throws LexicalException, SyntaxException {
         String input = "ident { image boo[a,b]; image meh[1,2]; image foo[a|b,c&d]; int lol; float blah; boolean moo; filename file; }";
-        SimpleParser parser = makeParser(input);
+        Parser parser = makeParser(input);
         parser.parse();
     }
 
@@ -175,7 +175,7 @@ public class SimpleParserTest {
         String input = "ident { image meh[]; }";
         thrown.expect(SyntaxException.class);
         try {
-            SimpleParser parser = makeParser(input);
+            Parser parser = makeParser(input);
             parser.parse();
         } catch (SyntaxException e) {
             show(e);
@@ -187,7 +187,7 @@ public class SimpleParserTest {
     @Test
     public void testAssignment() throws LexicalException, SyntaxException {
         String input = "prog {int y; \n y:=0;}";
-        SimpleParser parser = makeParser(input);
+        Parser parser = makeParser(input);
         parser.parse();
     }
 
@@ -196,7 +196,7 @@ public class SimpleParserTest {
         String input = "prog {int y; \n y:=;}";
         thrown.expect(SyntaxException.class);
         try {
-            SimpleParser parser = makeParser(input);
+            Parser parser = makeParser(input);
             parser.parse();
         } catch (SyntaxException e) {
             show(e);
