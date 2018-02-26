@@ -333,7 +333,7 @@ public class Parser {
                 Token op = match(t.kind);
                 Expression expression = unaryExpression();
                 return new ExpressionUnary(firstToken, op, expression);
-            } // UnaryExpressionNotPlusMinus
+            } // below: UnaryExpressionNotPlusMinus and primary
             default:
                 return primary();
         }

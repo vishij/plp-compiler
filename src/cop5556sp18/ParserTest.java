@@ -21,7 +21,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import static cop5556sp18.Scanner.Kind.OP_PLUS;
+import static cop5556sp18.Scanner.Kind.*;
 import static org.junit.Assert.assertEquals;
 
 public class ParserTest {
@@ -136,6 +136,96 @@ public class ParserTest {
     }
 
     @Test
+    public void testPowerExpression() throws LexicalException, SyntaxException {
+        String input = "x ** + 2";
+        Parser parser = makeParser(input);
+        Expression e = parser.expression();
+        show(e);
+        assertEquals(ExpressionBinary.class, e.getClass());
+        ExpressionBinary b = (ExpressionBinary) e;
+        assertEquals(ExpressionIdent.class, b.leftExpression.getClass());
+        ExpressionIdent left = (ExpressionIdent) b.leftExpression;
+        assertEquals("x", left.name);
+        assertEquals(ExpressionUnary.class, b.rightExpression.getClass());
+        ExpressionUnary right = (ExpressionUnary) b.rightExpression;
+        assertEquals(ExpressionIntegerLiteral.class, right.expression.getClass());
+        ExpressionIntegerLiteral intLit = (ExpressionIntegerLiteral) right.expression;
+        assertEquals(2, intLit.value);
+        assertEquals(OP_PLUS, right.op);
+        assertEquals(OP_POWER, b.op);
+    }
+
+
+    @Test
+    public void testAddMultExpression() throws LexicalException, SyntaxException {
+        String input = "12 + a * 2";
+        Parser parser = makeParser(input);
+        Expression e = parser.expression();
+        show(e);
+        assertEquals(ExpressionBinary.class, e.getClass());
+        ExpressionBinary b = (ExpressionBinary) e;
+        assertEquals(ExpressionIntegerLiteral.class, b.leftExpression.getClass());
+        ExpressionIntegerLiteral left = (ExpressionIntegerLiteral) b.leftExpression;
+        assertEquals(12, left.value);
+        assertEquals(ExpressionBinary.class, b.rightExpression.getClass());
+        ExpressionBinary right = (ExpressionBinary) b.rightExpression;
+        assertEquals(ExpressionIdent.class, right.leftExpression.getClass());
+        ExpressionIdent ident = (ExpressionIdent) right.leftExpression;
+        assertEquals("a", ident.name);
+        assertEquals(ExpressionIntegerLiteral.class, right.rightExpression.getClass());
+        ExpressionIntegerLiteral intLit = (ExpressionIntegerLiteral) right.rightExpression;
+        assertEquals(2, intLit.value);
+        assertEquals(OP_PLUS, b.op);
+        assertEquals(OP_TIMES, right.op);
+    }
+
+    @Test
+    public void testMultDivExpression() throws LexicalException, SyntaxException {
+        String input = "12 * a / 2";
+        Parser parser = makeParser(input);
+        Expression e = parser.expression();
+        show(e);
+        assertEquals(ExpressionBinary.class, e.getClass());
+        ExpressionBinary b = (ExpressionBinary) e;
+        assertEquals(ExpressionBinary.class, b.leftExpression.getClass());
+        ExpressionBinary left = (ExpressionBinary) b.leftExpression;
+        assertEquals(ExpressionIntegerLiteral.class, left.leftExpression.getClass());
+        ExpressionIntegerLiteral intLit = (ExpressionIntegerLiteral) left.leftExpression;
+        assertEquals(12, intLit.value);
+        assertEquals(OP_TIMES, left.op);
+        assertEquals(ExpressionIdent.class, left.rightExpression.getClass());
+        ExpressionIdent right = (ExpressionIdent) left.rightExpression;
+        assertEquals("a", right.name);
+        assertEquals(ExpressionIntegerLiteral.class, b.rightExpression.getClass());
+        ExpressionIntegerLiteral rightEx = (ExpressionIntegerLiteral) b.rightExpression;
+        assertEquals(2, rightEx.value);
+        assertEquals(OP_DIV, b.op);
+    }
+
+    @Test
+    public void testPowerAssociativityExpression() throws LexicalException, SyntaxException {
+        String input = "12 ** a ** 2";
+        Parser parser = makeParser(input);
+        Expression e = parser.expression();
+        show(e);
+        assertEquals(ExpressionBinary.class, e.getClass());
+        ExpressionBinary b = (ExpressionBinary) e;
+        assertEquals(ExpressionIntegerLiteral.class, b.leftExpression.getClass());
+        ExpressionIntegerLiteral left = (ExpressionIntegerLiteral) b.leftExpression;
+        assertEquals(12, left.value);
+        assertEquals(OP_POWER, b.op);
+        assertEquals(ExpressionBinary.class, b.rightExpression.getClass());
+        ExpressionBinary right = (ExpressionBinary) b.rightExpression;
+        assertEquals(ExpressionIdent.class, right.leftExpression.getClass());
+        ExpressionIdent leftEx = (ExpressionIdent) right.leftExpression;
+        assertEquals("a", leftEx.name);
+        assertEquals(OP_POWER, right.op);
+        assertEquals(ExpressionIntegerLiteral.class, right.rightExpression.getClass());
+        ExpressionIntegerLiteral rightEx = (ExpressionIntegerLiteral) right.rightExpression;
+        assertEquals(2, rightEx.value);
+    }
+
+    @Test
     public void testDemo1() throws LexicalException, SyntaxException {
         String input = "demo1 { \n" + "image h; \n" + "input h from @0; \n" + "show h; \n" + "sleep(4000); \n"
                 + "image g[width(h),height(h)]; \n" + "int x; \n" + "x:=0; \n" + "while(x<width(g)){int y; \n"
@@ -190,17 +280,17 @@ public class ParserTest {
         assertEquals(p.toString(),
                 "Program [progName=samples, block=Block [decsOrStatements=[Declaration [type=KW_image, name=bird, width=null, height=null], StatementInput [destName=bird, e=ExpressionIntegerLiteral [value=0]], ShowStatement [e=ExpressionIdent [name=bird]], StatementSleep [duration=ExpressionIntegerLiteral [value=4000]], Declaration [type=KW_image, name=bird2, width=ExpressionFunctionApp [function=KW_width, e=ExpressionIdent [name=bird]], height=ExpressionFunctionApp [function=KW_height, e=ExpressionIdent [name=bird]]], Declaration [type=KW_int, name=x, width=null, height=null], StatementAssign [lhs=LHSIdent [name=x], e=ExpressionIntegerLiteral [value=0]], StatementWhile [guard=ExpressionBinary [leftExpression=ExpressionIdent [name=x], op=OP_LT, rightExpression=ExpressionFunctionApp [function=KW_width, e=ExpressionIdent [name=bird2]]], b=Block [decsOrStatements=[Declaration [type=KW_int, name=y, width=null, height=null], StatementAssign [lhs=LHSIdent [name=y], e=ExpressionIntegerLiteral [value=0]], StatementWhile [guard=ExpressionBinary [leftExpression=ExpressionIdent [name=y], op=OP_LT, rightExpression=ExpressionFunctionApp [function=KW_height, e=ExpressionIdent [name=bird2]]], b=Block [decsOrStatements=[StatementAssign [lhs=LHSSample [name=bird2, pixelSelector=PixelSelector [ex=ExpressionIdent [name=x], ey=ExpressionIdent [name=y]], color=KW_blue], e=ExpressionFunctionApp [function=KW_red, e=ExpressionPixel [name=bird, pixelSelector=PixelSelector [ex=ExpressionIdent [name=x], ey=ExpressionIdent [name=y]]]]], StatementAssign [lhs=LHSSample [name=bird2, pixelSelector=PixelSelector [ex=ExpressionIdent [name=x], ey=ExpressionIdent [name=y]], color=KW_green], e=ExpressionFunctionApp [function=KW_blue, e=ExpressionPixel [name=bird, pixelSelector=PixelSelector [ex=ExpressionIdent [name=x], ey=ExpressionIdent [name=y]]]]], StatementAssign [lhs=LHSSample [name=bird2, pixelSelector=PixelSelector [ex=ExpressionIdent [name=x], ey=ExpressionIdent [name=y]], color=KW_red], e=ExpressionFunctionApp [function=KW_green, e=ExpressionPixel [name=bird, pixelSelector=PixelSelector [ex=ExpressionIdent [name=x], ey=ExpressionIdent [name=y]]]]], StatementAssign [lhs=LHSSample [name=bird2, pixelSelector=PixelSelector [ex=ExpressionIdent [name=x], ey=ExpressionIdent [name=y]], color=KW_alpha], e=ExpressionPredefinedName [name=KW_Z]], StatementAssign [lhs=LHSIdent [name=y], e=ExpressionBinary [leftExpression=ExpressionIdent [name=y], op=OP_PLUS, rightExpression=ExpressionIntegerLiteral [value=1]]]]]], StatementAssign [lhs=LHSIdent [name=x], e=ExpressionBinary [leftExpression=ExpressionIdent [name=x], op=OP_PLUS, rightExpression=ExpressionIntegerLiteral [value=1]]]]]], ShowStatement [e=ExpressionIdent [name=bird2]], StatementSleep [duration=ExpressionIntegerLiteral [value=4000]]]]]");
     }
-    
+
     @Test
     public void testPolar() throws LexicalException, SyntaxException {
         String input = "Polar { \n" + "p := polar_r[x,y]; \n" + "}";
         Parser parser = makeParser(input);
         Program p = parser.parse();
         show(p);
-        assertEquals(p.toString(),"Program [progName=Polar, block=Block [decsOrStatements=[StatementAssign [lhs=LHSIdent [name=p], e=ExpressionFunctionAppWithPixel [name=KW_polar_r, e0=ExpressionIdent [name=x], e1=ExpressionIdent [name=y]]]]]]");
-        
+        assertEquals(p.toString(), "Program [progName=Polar, block=Block [decsOrStatements=[StatementAssign [lhs=LHSIdent [name=p], e=ExpressionFunctionAppWithPixel [name=KW_polar_r, e0=ExpressionIdent [name=x], e1=ExpressionIdent [name=y]]]]]]");
+
     }
-    
+
     @Test
     public void testDeclarationError() throws LexicalException, SyntaxException {
         String input = "image foo[[3,4]";
