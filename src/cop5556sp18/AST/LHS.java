@@ -14,9 +14,14 @@ package cop5556sp18.AST;
  */
 
 import cop5556sp18.Scanner.Token;
+import cop5556sp18.Types.Type;
 
 public abstract class LHS extends ASTNode {
 
+	// TODO: implement for all subclasses
+	public Type type;
+	public Declaration declaration;
+	
 	public LHS(Token firstToken) {
 		super(firstToken);
 	}

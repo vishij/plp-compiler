@@ -14,9 +14,14 @@ package cop5556sp18.AST;
  */
 
 import cop5556sp18.Scanner.Token;
+import cop5556sp18.Types.Type;
 
 public abstract class Expression extends ASTNode {
 
+	// TODO: implement for all subclasses
+	public Type type;
+	public Declaration declaration;
+	
 	public Expression(Token firstToken) {
 		super(firstToken);
 	}
