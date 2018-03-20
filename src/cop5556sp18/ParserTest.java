@@ -17,6 +17,8 @@ import cop5556sp18.AST.*;
 import cop5556sp18.Parser.SyntaxException;
 import cop5556sp18.Scanner.Kind;
 import cop5556sp18.Scanner.LexicalException;
+import cop5556sp18.TypeChecker.SemanticException;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -304,6 +306,15 @@ public class ParserTest {
             throw e;
         }
     }
+    
+    @Test
+	public void statementWrite() throws Exception {
+		String input = "prog { write x to y; }"; // error, incompatible types in binary expression
+		Parser parser = makeParser(input);
+        Program p = parser.parse();
+        show(p);
+        assertEquals(p.toString(), "Program [progName=prog, block=Block [decsOrStatements=[StatementWrite [sourceName=x, destName=y]]]]");
 
+	}
 
 }
