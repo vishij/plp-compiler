@@ -389,7 +389,6 @@ public class TypeChecker implements ASTVisitor {
         return null;
     }
 
-    // TODO: see if code change needed as per test case
     @Override
     public Object visitStatementAssign(StatementAssign statementAssign, Object arg) throws Exception {
         Token firstToken = statementAssign.firstToken;
@@ -476,7 +475,6 @@ public class TypeChecker implements ASTVisitor {
     public Object visitLHSPixel(LHSPixel lhsPixel, Object arg) throws Exception {
         Token firstToken = lhsPixel.firstToken;
         String lhsPixelName = lhsPixel.name;
-        // TODO: check if it needs to be moved inside if
         lhsPixel.declaration = symbolTable.lookup(lhsPixelName);
         if (lhsPixel.declaration == null) {
             throw new SemanticException(firstToken,

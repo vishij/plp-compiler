@@ -262,8 +262,26 @@ public class TypeCheckerTest {
     }
 
     @Test
+    public void statementWhile1() throws Exception {
+        String input = "b { while (true) {} ;}";
+        typeCheck(input);
+    }
+
+    @Test
     public void statementWhileFail() throws Exception {
         String input = "prog { while(x < 100){};}";
+        thrown.expect(SemanticException.class);
+        try {
+            typeCheck(input);
+        } catch (SemanticException e) {
+            show(e);
+            throw e;
+        }
+    }
+
+    @Test
+    public void statementWhileFail1() throws Exception {
+        String input = "b { while (2) {} ;}";
         thrown.expect(SemanticException.class);
         try {
             typeCheck(input);
@@ -447,6 +465,18 @@ public class TypeCheckerTest {
 
     @Test
     public void nestedDec() throws Exception {
+        String input = "X{ int x; int y; while (x == y) {int x;}; }";
+        typeCheck(input);
+    }
+
+    @Test
+    public void nestedDec1() throws Exception {
+        String input = "X{ int x; int y; while (x == y) { x := 2;}; }";
+        typeCheck(input);
+    }
+
+    @Test
+    public void nestedDec2() throws Exception {
         String input = "X{ int x; int z; while (x == y) {int x;}; }";
         thrown.expect(SemanticException.class);
         try {
@@ -458,13 +488,13 @@ public class TypeCheckerTest {
     }
 
     @Test
-    public void nestedDec1() throws Exception {
+    public void nestedDec3() throws Exception {
         String input = "X{ int x; int y; while (x == y) { show x;}; }";
         typeCheck(input);
     }
 
     @Test
-    public void nestedDec2() throws Exception {
+    public void nestedDec4() throws Exception {
         String input = "X{ int x; int y; while (x == y) { int z;}; show z;}";
         thrown.expect(SemanticException.class);
         try {
