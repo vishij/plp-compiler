@@ -118,6 +118,18 @@ public class TypeCheckerTest {
     }
 
     @Test
+    public void declarationTypeFail() throws Exception {
+        String input = "prog {image a[10.00, 12];}";
+        thrown.expect(SemanticException.class);
+        try {
+            typeCheck(input);
+        } catch (SemanticException e) {
+            show(e);
+            throw e;
+        }
+    }
+
+    @Test
     public void statementWrite() throws Exception {
         String input = "prog { image x; filename y; write x to y; }";
         typeCheck(input);
@@ -424,6 +436,36 @@ public class TypeCheckerTest {
     @Test
     public void testCartTypeFail() throws Exception {
         String input = "Polar {int x; float y; int p; p := cart_x[x,y];}";
+        thrown.expect(SemanticException.class);
+        try {
+            typeCheck(input);
+        } catch (SemanticException e) {
+            show(e);
+            throw e;
+        }
+    }
+
+    @Test
+    public void nestedDec() throws Exception {
+        String input = "X{ int x; int z; while (x == y) {int x;}; }";
+        thrown.expect(SemanticException.class);
+        try {
+            typeCheck(input);
+        } catch (SemanticException e) {
+            show(e);
+            throw e;
+        }
+    }
+
+    @Test
+    public void nestedDec1() throws Exception {
+        String input = "X{ int x; int y; while (x == y) { show x;}; }";
+        typeCheck(input);
+    }
+
+    @Test
+    public void nestedDec2() throws Exception {
+        String input = "X{ int x; int y; while (x == y) { int z;}; show z;}";
         thrown.expect(SemanticException.class);
         try {
             typeCheck(input);
