@@ -55,8 +55,8 @@ public class SymbolTable {
     }
 
     /**
-     * Insert new entry for new scope entered. If the hashTableChain is null, create
-     * new chain. If the chain doesn't have the current scope, put the new scope in
+     * Insert new entry for current scope. If the hashTableChain is null, create
+     * new chain. If the chain doesn't have the current scope, put the scope in
      * the chain along with the attributes, and then add it to the symbolTable map.
      *
      * @param identifier
