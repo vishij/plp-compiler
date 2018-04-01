@@ -190,7 +190,6 @@ public class TypeChecker implements ASTVisitor {
             case OP_MINUS:
             case OP_TIMES:
             case OP_DIV:
-            case OP_MOD:
             case OP_POWER:
                 if (leftExprType == Type.INTEGER && rightExprType == Type.INTEGER) {
                     inferredType = Type.INTEGER;
@@ -206,6 +205,15 @@ public class TypeChecker implements ASTVisitor {
                             firstToken.line(), firstToken.posInLine()));
                 }
                 break;
+            case OP_MOD:
+            	if (leftExprType == Type.INTEGER && rightExprType == Type.INTEGER) {
+                    inferredType = Type.INTEGER;
+                } else {
+                    throw new SemanticException(firstToken, String.format(
+                            "Line: %s Pos: %s \t Error: Incompatible types around operator. Allowed only integer",
+                            firstToken.line(), firstToken.posInLine()));
+                }
+            	break;
             case OP_AND:
             case OP_OR:
                 if (leftExprType == Type.INTEGER && rightExprType == Type.INTEGER) {

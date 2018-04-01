@@ -504,4 +504,28 @@ public class TypeCheckerTest {
             throw e;
         }
     }
+    
+    @Test
+    public void testinvalidExpressionBinary1() throws Exception {
+        String input = "prog{ show (1.0 % 2.0);}";
+        thrown.expect(SemanticException.class);
+        try {
+            typeCheck(input);
+        } catch (SemanticException e) {
+            show(e);
+            throw e;
+        }
+    }
+    
+    @Test
+    public void testinvalidExpressionBinary2() throws Exception {
+        String input = "prog{ show (1 % 2.0);}";
+        thrown.expect(SemanticException.class);
+        try {
+            typeCheck(input);
+        } catch (SemanticException e) {
+            show(e);
+            throw e;
+        }
+    }
 }
