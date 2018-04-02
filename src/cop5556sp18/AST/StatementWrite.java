@@ -19,6 +19,8 @@ public class StatementWrite extends Statement {
 
 	public final String sourceName;
 	public final String destName;
+	public Declaration sourceDeclaration;
+	public Declaration destDeclaration;
 
 	public StatementWrite(Token firstToken, Token sourceName, Token destName) {
 		super(firstToken);

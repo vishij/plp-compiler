@@ -88,18 +88,18 @@ public class TypeChecker implements ASTVisitor {
     @Override
     public Object visitStatementWrite(StatementWrite statementWrite, Object arg) throws Exception {
         Token firstToken = statementWrite.firstToken;
-        Declaration sourceDec = symbolTable.lookup(statementWrite.sourceName);
-        System.out.println("sourceDec: " + sourceDec);
-        if (sourceDec != null) {
-            Declaration destDec = symbolTable.lookup(statementWrite.destName);
-            if (destDec != null) {
-                if (sourceDec.type != Kind.KW_image) {
+        statementWrite.sourceDeclaration = symbolTable.lookup(statementWrite.sourceName);
+        System.out.println("sourceDec: " + statementWrite.sourceDeclaration);
+        if (statementWrite.sourceDeclaration != null) {
+        	statementWrite.destDeclaration = symbolTable.lookup(statementWrite.destName);
+            if (statementWrite.destDeclaration != null) {
+                if (statementWrite.sourceDeclaration.type != Kind.KW_image) {
                     throw new SemanticException(firstToken,
                             String.format(
                                     "Line: %s Pos: %s \t Error: Imcompatible source type for write: should be image",
                                     firstToken.line(), firstToken.posInLine()));
                 }
-                if (destDec.type != Kind.KW_filename) {
+                if (statementWrite.destDeclaration.type != Kind.KW_filename) {
                     throw new SemanticException(firstToken, String.format(
                             "Line: %s Pos: %s \t Error: Imcompatible destination type for write: should be filename",
                             firstToken.line(), firstToken.posInLine()));
@@ -121,9 +121,9 @@ public class TypeChecker implements ASTVisitor {
     @Override
     public Object visitStatementInput(StatementInput statementInput, Object arg) throws Exception {
         Token firstToken = statementInput.firstToken;
-        Declaration dec = symbolTable.lookup(statementInput.destName);
+        statementInput.declaration = symbolTable.lookup(statementInput.destName);
         System.out.println("SYM: " + symbolTable.toString());
-        if (dec != null) {
+        if (statementInput.declaration != null) {
             statementInput.e.visit(this, arg);
             // have to check if visit method assigns type as input or not
             if (statementInput.e.type != Type.INTEGER) {
@@ -255,9 +255,36 @@ public class TypeChecker implements ASTVisitor {
 
     @Override
     public Object visitExpressionUnary(ExpressionUnary expressionUnary, Object arg) throws Exception {
+    	Token firstToken = expressionUnary.firstToken;
         expressionUnary.expression.visit(this, arg);
         // exception not thrown as expression can be anything
-        expressionUnary.type = expressionUnary.expression.type;
+        Type type = expressionUnary.expression.type;
+//        expressionUnary.type = expressionUnary.expression.type;
+        switch (expressionUnary.op) {
+        case OP_PLUS:
+        case OP_MINUS:
+        	if (type == Type.INTEGER || type == Type.FLOAT) {
+        		expressionUnary.type = type;
+            } else {
+            	throw new SemanticException(firstToken, String.format(
+                        "Line: %s Pos: %s \t Error: Incompatible type for the Unaryoperator. Allowed only integer and float",
+                        firstToken.line(), firstToken.posInLine()));
+            }
+        	break;
+        case OP_EXCLAMATION:
+        	if (type == Type.INTEGER || type == Type.BOOLEAN) {
+        		expressionUnary.type = type;
+            } else {
+            	throw new SemanticException(firstToken, String.format(
+                        "Line: %s Pos: %s \t Error: Incompatible type for the Unaryoperator. Allowed only integer and boolean",
+                        firstToken.line(), firstToken.posInLine()));
+            }
+        	 break;
+        default:
+            throw new SemanticException(firstToken, String.format(
+                    "Line: %s Pos: %s \t Error BinaryExpression: Invalid or Incompatible type around Unary operator.",
+                    firstToken.line(), firstToken.posInLine()));
+        }
         return null;
     }
 

@@ -71,6 +71,8 @@ public class RuntimeImageSupport {
 		return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
 	}
 
+	public static final String resizeImageSig = "(" + ImageDesc + "II)" + ImageDesc;
+	
 	public static BufferedImage resize(BufferedImage before, int maxX,
 			int maxY) {
 		int w = before.getWidth();
