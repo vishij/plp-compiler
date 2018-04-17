@@ -1299,13 +1299,36 @@ public class CodeGenTest {
 
     @Test
     public void statementWhile0() throws Exception {
-        String prog = "swhile";
+        String prog = "stmtWhile";
         String input = prog + "{int a; a := 5; while(a >= 0){ show a; a := a - 1; }; } ";
         byte[] bytecode = genCode(input);
         String[] commandLineArgs = {"success"};
         runCode(prog, bytecode, commandLineArgs);
         show("Log:\n" + RuntimeLog.globalLog);
         assertEquals("entering main;5;4;3;2;1;0;leaving main;", RuntimeLog.globalLog.toString());
+    }
+    
+//    @Test
+    public void statementWhile1() throws Exception {
+        String prog = "stmtWhile";
+        String input = prog + "{int x; \r\n" + 
+        		"x := 2; \r\n" + 
+        		"image c; \r\n" + 
+        		"while(x != 0)\r\n" + 
+        		"{\r\n" + 
+        		"show c;\r\n" + 
+        		"int c;\r\n" + 
+        		"c := 4;\r\n" + 
+        		"c := c + x;\r\n" +
+        		"show c;\r\n" + 
+        		"x := x - 1;\r\n" +
+        		"}; \r\n" + 
+        		"show x; } ";
+        byte[] bytecode = genCode(input);
+        String[] commandLineArgs = {"success"};
+        runCode(prog, bytecode, commandLineArgs);
+        show("Log:\n" + RuntimeLog.globalLog);
+//        assertEquals("entering main;5;4;3;2;1;0;leaving main;", RuntimeLog.globalLog.toString());
     }
 
     @Test
@@ -1503,7 +1526,19 @@ public class CodeGenTest {
         show("Log:\n" + RuntimeLog.globalLog);
         assertEquals("entering main;0;leaving main;", RuntimeLog.globalLog.toString());
     }
-
+    
+    @Test
+	public void testRandom() throws Exception {
+		String prog = "testExpressionPixel1";
+		String input =  prog + "{boolean showImage; showImage := true; image c; input c from @0; if(showImage){ show c; sleep(4000);  }; }";
+		byte[] bytecode = genCode(input);		
+		String[] commandLineArgs = {"https://d2droglu4qf8st.cloudfront.net/2016/05/282829/Marbled-Hazelnut-Brownie-Cheesecake-for-a-Crowd_Large400_ID-1680086.jpg"};		
+		runCode(prog, bytecode, commandLineArgs);
+		show("Log:\n"+RuntimeLog.globalLog);
+		//assertEquals("entering main;-13100275;leaving main;",RuntimeLog.globalLog.toString());
+	}
+    
+    
     public static void dummy(String args[]) {
         int a;
         a = 2 > 3 ? 1 : 0;

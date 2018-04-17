@@ -799,6 +799,7 @@ public class CodeGenerator implements ASTVisitor, Opcodes {
                 CodeGenUtils.genLogTOS(GRADE, mv, type);
                 mv.visitMethodInsn(INVOKESTATIC, RuntimeImageSupport.className, "makeFrame",
                         RuntimeImageSupport.makeFrameSig, itf);
+                mv.visitInsn(POP);
             }
             default:
                 break;
