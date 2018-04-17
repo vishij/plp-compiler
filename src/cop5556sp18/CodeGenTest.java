@@ -620,7 +620,7 @@ public class CodeGenTest {
     @Test
     public void statementSleep() throws Exception {
         String prog = "stmtSleep";
-        String input = prog + "{sleep 4000;}";
+        String input = prog + "{sleep 1000;}";
         byte[] bytecode = genCode(input);
         String[] commandLineArgs = {};
         runCode(prog, bytecode, commandLineArgs);
@@ -850,7 +850,7 @@ public class CodeGenTest {
         assertEquals("entering main;7;255;leaving main;", RuntimeLog.globalLog.toString());
     }
 
-    @Test
+    //    @Test
     public void statementWrite() throws Exception {
         String prog = "stmtWrite";
         String input = prog + "{image foo; filename bar; input bar from @1; show foo; write foo to bar;} ";
@@ -862,7 +862,7 @@ public class CodeGenTest {
     }
 
 
-    @Test
+    //    @Test
     public void statementWrite0() throws Exception {
         String prog = "makeRedImage";
         String input = prog + " { image im[256,256]; int x; int y; filename dest; input dest from @ 0;  x := 0; y := 0; while (x < width(im)) { y := 0; while (y < height(im)) { im[x,y] := <<255,255,0,0>>; y := y+1; }; x := x+1; }; show im; sleep 4000; write im to dest; }";
@@ -1330,12 +1330,36 @@ public class CodeGenTest {
         assertEquals("entering main;0;leaving main;", RuntimeLog.globalLog.toString());
     }
 
-    @Test
+//    @Test
     public void testExpressionPixel() throws Exception {
         String prog = "exprPixel";
-        String input = prog + "{image a; input a from @0; show a[1, 2];}";
+        String input = prog + "{image a; input a from @0; show a[0, 2];}";
         byte[] bytecode = genCode(input);
         String[] commandLineArgs = {"https://pbs.twimg.com/profile_images/948294484596375552/RyGNqDEM_400x400.jpg"};
+        runCode(prog, bytecode, commandLineArgs);
+        show("Log:\n" + RuntimeLog.globalLog);
+        assertEquals("entering main;-526345;leaving main;", RuntimeLog.globalLog.toString());
+    }
+
+//    @Test
+    public void testExpressionPixelFloat() throws Exception {
+        String prog = "exprPixel";
+        String input = prog + "{image a; input a from @0; show a[2.236068, 1.1071488];}";
+        byte[] bytecode = genCode(input);
+        String[] commandLineArgs = {"https://pbs.twimg.com/profile_images/948294484596375552/RyGNqDEM_400x400.jpg"};
+        runCode(prog, bytecode, commandLineArgs);
+        show("Log:\n" + RuntimeLog.globalLog);
+        assertEquals("entering main;-526345;leaving main;", RuntimeLog.globalLog.toString());
+    }
+
+//    @Test
+    public void expressionPixelSelectorFloat1() throws Exception {
+        String prog = "prog";
+        String input = prog + "{image a; input a from @ 0; a[polar_r[2, 2], polar_a[2, 2]] := a[polar_r[2, 2], polar_a[2, 2]]; show a[2,2]; }";
+
+        byte[] bytecode = genCode(input);
+        String[] commandLineArgs = {"https://pbs.twimg.com/profile_images/948294484596375552/RyGNqDEM_400x400.jpg"};
+
         runCode(prog, bytecode, commandLineArgs);
         show("Log:\n" + RuntimeLog.globalLog);
         assertEquals("entering main;-526345;leaving main;", RuntimeLog.globalLog.toString());
@@ -1368,12 +1392,12 @@ public class CodeGenTest {
         show("Log:\n" + RuntimeLog.globalLog);
     }
 
-    //    @Test
+    //        @Test
     public void makeRedImage() throws Exception {
         String prog = "makeRedImage";
         String input = prog + " { \n" + "image im[256,256]; \n" + "int x; \n" + "int y; \n" + "x := 0; \n"
                 + "y := 0; \n" + "while (x < width(im)) { \n" + "y := 0; \n" + "while (y < height(im)) { \n"
-                + "im[x,y] := <<255,255,0,0>>; \n" + "y := y+1; \n" + "}; \n" + "x := x+1; \n" + "}; \n" + "show im; sleep(1000); \n"
+                + "im[x,y] := <<255,255,0,0>>; \n" + "y := y+1; \n" + "}; \n" + "x := x+1; \n" + "}; \n" + "show im; sleep(4000); \n"
                 + "}";
         byte[] bytecode = genCode(input);
         String[] commandLineArgs = {""};
@@ -1382,14 +1406,14 @@ public class CodeGenTest {
         show("Log:\n" + RuntimeLog.globalLog);
     }
 
-    //    @Test
+    //        @Test
     public void testPolarR2() throws Exception {
         String prog = "PolarR2";
         String input = prog + " { \n" + "image im[1024,1024]; \n" + "int x; \n" + "x := 0; \n"
                 + "while (x < width(im)) { \n" + "int y; \n" + "y := 0; \n" + "while (y < height(im)) { \n"
                 + "float p; \n" + "p := polar_r[x,y]; \n" + "int r; \n" + "r := int(p) % Z; \n"
                 + "im[x,y] := <<Z, 0, 0, r>>; \n" + "y := y+1; \n" + "}; \n" + "x := x + 1; \n" + "}; \n"
-                + "show im; sleep(1000); \n" + "}";
+                + "show im; sleep(4000); \n" + "}";
         byte[] bytecode = genCode(input);
         String[] commandLineArgs = {""};
 
@@ -1422,7 +1446,7 @@ public class CodeGenTest {
         String[] commandLineArgs = {""};
         runCode(prog, bytecode, commandLineArgs);
         show("Log:\n" + RuntimeLog.globalLog);
-        assertEquals("entering main;1;leaving main;", RuntimeLog.globalLog.toString());
+        assertEquals("entering main;0;leaving main;", RuntimeLog.globalLog.toString());
     }
 
     @Test
@@ -1458,12 +1482,32 @@ public class CodeGenTest {
         assertEquals("entering main;1.1071488;leaving main;", RuntimeLog.globalLog.toString());
     }
 
+    @Test
+    public void testExpressionConditional1() throws Exception {
+        String prog = "testExpressionConditional1";
+        String input = prog + "{int a; a := 3>=2 ? 1 : 0; show a;}";
+        byte[] bytecode = genCode(input);
+        String[] commandLineArgs = {};
+        runCode(prog, bytecode, commandLineArgs);
+        show("Log:\n" + RuntimeLog.globalLog);
+        assertEquals("entering main;1;leaving main;", RuntimeLog.globalLog.toString());
+    }
+
+    @Test
+    public void testExpressionConditional2() throws Exception {
+        String prog = "testExpressionConditional1";
+        String input = prog + "{int a; a := 2==3 ? 1 : 0; show a;}";
+        byte[] bytecode = genCode(input);
+        String[] commandLineArgs = {};
+        runCode(prog, bytecode, commandLineArgs);
+        show("Log:\n" + RuntimeLog.globalLog);
+        assertEquals("entering main;0;leaving main;", RuntimeLog.globalLog.toString());
+    }
+
     public static void dummy(String args[]) {
-        float a = 0;
-        if (a != 0) {
-            int b;
-            b = 0;
-        }
+        int a;
+        a = 2 > 3 ? 1 : 0;
+//        show a;
 //    		Math.
     }
 }

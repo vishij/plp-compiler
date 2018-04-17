@@ -296,15 +296,16 @@ public class CodeGenerator implements ASTVisitor, Opcodes {
     }
 
     private void getFloatConditonalByteCode(Integer jumpOpCode) {
-        Label floatEqLabel = new Label();
+        Label trueLabel = new Label();
         mv.visitInsn(FCMPL);
-        mv.visitJumpInsn(jumpOpCode, floatEqLabel);
+        mv.visitJumpInsn(jumpOpCode, trueLabel);
         mv.visitInsn(ICONST_0);
-        Label floatNeqLabel = new Label();
-        mv.visitJumpInsn(GOTO, floatNeqLabel);
-        mv.visitLabel(floatEqLabel);
+        Label falseLabel = new Label();
+        mv.visitJumpInsn(GOTO, falseLabel);
+
+        mv.visitLabel(trueLabel);
         mv.visitInsn(ICONST_1);
-        mv.visitLabel(floatNeqLabel);
+        mv.visitLabel(falseLabel);
     }
 
     private void getConditionalByteCode(Integer opcode) {
@@ -313,6 +314,7 @@ public class CodeGenerator implements ASTVisitor, Opcodes {
         mv.visitInsn(ICONST_0);
         Label falseLabel = new Label();
         mv.visitJumpInsn(GOTO, falseLabel);
+
         mv.visitLabel(trueLabel);
         mv.visitInsn(ICONST_1);
         mv.visitLabel(falseLabel);
@@ -320,9 +322,16 @@ public class CodeGenerator implements ASTVisitor, Opcodes {
 
     @Override
     public Object visitExpressionConditional(ExpressionConditional expressionConditional, Object arg) throws Exception {
-        expressionConditional.falseExpression.visit(this, arg);
-        expressionConditional.trueExpression.visit(this, arg);
+        Label condLabel1 = new Label();
+        Label condLabel2 = new Label();
         expressionConditional.guard.visit(this, arg);
+        mv.visitJumpInsn(IFEQ, condLabel1);
+        expressionConditional.trueExpression.visit(this, arg);
+        mv.visitJumpInsn(GOTO, condLabel2);
+
+        mv.visitLabel(condLabel1);
+        expressionConditional.falseExpression.visit(this, arg);
+        mv.visitLabel(condLabel2);
         return null;
     }
 
@@ -379,8 +388,7 @@ public class CodeGenerator implements ASTVisitor, Opcodes {
             }
 
         } else if (fxn.equals(Scanner.Kind.KW_int)) {
-            System.out.println("f2i");
-
+//            System.out.println("f2i");
             if (type.equals(Type.FLOAT)) {
                 mv.visitInsn(F2I);
             }
@@ -412,13 +420,15 @@ public class CodeGenerator implements ASTVisitor, Opcodes {
             mv.visitMethodInsn(INVOKESTATIC, "java/lang/Math", "cos", "(D)D", itf);
             mv.visitInsn(D2F);
             mv.visitInsn(FMUL);
-            mv.visitMethodInsn(INVOKESTATIC, "java/lang/Math", "round", "(F)I", itf);
+            mv.visitInsn(F2I);
+//            mv.visitMethodInsn(INVOKESTATIC, "java/lang/Math", "round", "(F)I", itf);
         } else if (fxn.equals(Scanner.Kind.KW_cart_y)) {
             mv.visitInsn(F2D);
             mv.visitMethodInsn(INVOKESTATIC, "java/lang/Math", "sin", "(D)D", itf);
             mv.visitInsn(D2F);
             mv.visitInsn(FMUL);
-            mv.visitMethodInsn(INVOKESTATIC, "java/lang/Math", "round", "(F)I", itf);
+            mv.visitInsn(F2I);
+//            mv.visitMethodInsn(INVOKESTATIC, "java/lang/Math", "round", "(F)I", itf);
         } else if (fxn.equals(Scanner.Kind.KW_polar_a)) {
             mv.visitInsn(POP);
             mv.visitInsn(POP);
@@ -464,7 +474,25 @@ public class CodeGenerator implements ASTVisitor, Opcodes {
     @Override
     public Object visitExpressionPixel(ExpressionPixel expressionPixel, Object arg) throws Exception {
         mv.visitVarInsn(ALOAD, expressionPixel.declaration.slotNumber);
-        expressionPixel.pixelSelector.visit(this, arg);
+        if (expressionPixel.pixelSelector.ex.type.equals(Type.INTEGER)) {
+            expressionPixel.pixelSelector.visit(this, arg);
+        }
+        if (expressionPixel.pixelSelector.ex.type.equals(Type.FLOAT)) {
+            expressionPixel.pixelSelector.visit(this, arg);
+            mv.visitInsn(F2D);
+            mv.visitMethodInsn(INVOKESTATIC, "java/lang/Math", "cos", "(D)D", itf);
+            mv.visitInsn(D2F);
+            mv.visitInsn(FMUL);
+            mv.visitInsn(F2I);
+        }
+        if (expressionPixel.pixelSelector.ey.type.equals(Type.FLOAT)) {
+            expressionPixel.pixelSelector.visit(this, arg);
+            mv.visitInsn(F2D);
+            mv.visitMethodInsn(INVOKESTATIC, "java/lang/Math", "sin", "(D)D", itf);
+            mv.visitInsn(D2F);
+            mv.visitInsn(FMUL);
+            mv.visitInsn(F2I);
+        }
         mv.visitMethodInsn(INVOKESTATIC, RuntimeImageSupport.className, "getPixel", RuntimeImageSupport.getPixelSig,
                 itf);
         return null;
@@ -501,7 +529,7 @@ public class CodeGenerator implements ASTVisitor, Opcodes {
         expressionUnary.expression.visit(this, arg);
         Type type = expressionUnary.expression.type;
         if (expressionUnary.op.equals(Kind.OP_PLUS)) {
-            // TODO: check what to do here
+            // do nothing
         } else if (expressionUnary.op.equals(Kind.OP_MINUS)) {
             if (type.equals(Type.INTEGER)) {
                 mv.visitInsn(INEG);
@@ -544,7 +572,26 @@ public class CodeGenerator implements ASTVisitor, Opcodes {
     public Object visitLHSPixel(LHSPixel lhsPixel, Object arg) throws Exception {
 //    		System.out.println(lhsPixel.type);
         mv.visitVarInsn(ALOAD, lhsPixel.declaration.slotNumber);
-        lhsPixel.pixelSelector.visit(this, arg);
+        if (lhsPixel.pixelSelector.ex.type.equals(Type.INTEGER)) {
+            lhsPixel.pixelSelector.visit(this, arg);
+        }
+        if (lhsPixel.pixelSelector.ex.type.equals(Type.FLOAT)) {
+            lhsPixel.pixelSelector.visit(this, arg);
+            mv.visitInsn(F2D);
+            mv.visitMethodInsn(INVOKESTATIC, "java/lang/Math", "cos", "(D)D", itf);
+            mv.visitInsn(D2F);
+            mv.visitInsn(FMUL);
+            mv.visitInsn(F2I);
+        }
+        if (lhsPixel.pixelSelector.ey.type.equals(Type.FLOAT)) {
+            lhsPixel.pixelSelector.visit(this, arg);
+            mv.visitInsn(F2D);
+            mv.visitMethodInsn(INVOKESTATIC, "java/lang/Math", "sin", "(D)D", itf);
+            mv.visitInsn(D2F);
+            mv.visitInsn(FMUL);
+            mv.visitInsn(F2I);
+        }
+//        lhsPixel.pixelSelector.visit(this, arg);
         mv.visitMethodInsn(INVOKESTATIC, RuntimeImageSupport.className, "setPixel", RuntimeImageSupport.setPixelSig,
                 itf);
 //    		mv.visitVarInsn(ISTORE, lhsPixel.declaration.slotNumber);
@@ -554,7 +601,26 @@ public class CodeGenerator implements ASTVisitor, Opcodes {
     @Override
     public Object visitLHSSample(LHSSample lhsSample, Object arg) throws Exception {
         mv.visitVarInsn(ALOAD, lhsSample.declaration.slotNumber);
-        lhsSample.pixelSelector.visit(this, arg);
+//        lhsSample.pixelSelector.visit(this, arg);
+        if (lhsSample.pixelSelector.ex.type.equals(Type.INTEGER)) {
+            lhsSample.pixelSelector.visit(this, arg);
+        }
+        if (lhsSample.pixelSelector.ex.type.equals(Type.FLOAT)) {
+            lhsSample.pixelSelector.visit(this, arg);
+            mv.visitInsn(F2D);
+            mv.visitMethodInsn(INVOKESTATIC, "java/lang/Math", "cos", "(D)D", itf);
+            mv.visitInsn(D2F);
+            mv.visitInsn(FMUL);
+            mv.visitInsn(F2I);
+        }
+        if (lhsSample.pixelSelector.ey.type.equals(Type.FLOAT)) {
+            lhsSample.pixelSelector.visit(this, arg);
+            mv.visitInsn(F2D);
+            mv.visitMethodInsn(INVOKESTATIC, "java/lang/Math", "sin", "(D)D", itf);
+            mv.visitInsn(D2F);
+            mv.visitInsn(FMUL);
+            mv.visitInsn(F2I);
+        }
         if (lhsSample.color.equals(Kind.KW_alpha)) {
             mv.visitInsn(ICONST_0);
         } else if (lhsSample.color.equals(Kind.KW_red)) {
