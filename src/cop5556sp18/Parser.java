@@ -146,7 +146,6 @@ public class Parser {
                 Expression duration = expression();
                 return new StatementSleep(firstToken, duration);
             }
-            // TODO: refactor
             // LHS statement cases: LHS ::= IDENTIFIER | IDENTIFIER PixelSelector | Color (
             // IDENTIFIER PixelSelector )
             case IDENTIFIER:
@@ -162,7 +161,6 @@ public class Parser {
         }
     }
 
-    // TODO: make statementIf and statementWhile methods generic
     private StatementIf statementIf() throws SyntaxException {
         Token firstToken = t;
         match(KW_if);
@@ -208,8 +206,8 @@ public class Parser {
             match(RPAREN);
             return new LHSSample(firstToken, name, pixelSelector, color);
         } else {
-            throw new SyntaxException(t, "Syntax Error: Wrong statement syntax for: " + t.getText() + " at position: "
-                    + t.posInLine() + " in line: " + t.line());
+            throw new SyntaxException(t, String.format("Syntax Error: Wrong statement syntax for: %s at position: %s in line: %s",
+                    t.getText(), t.posInLine(), t.line()));
         }
     }
 
@@ -325,7 +323,6 @@ public class Parser {
 
     private Expression unaryExpression() throws SyntaxException {
         Token firstToken = t;
-        //TODO: switch to if else?
         switch (t.kind) {
             case OP_PLUS:
             case OP_MINUS:
@@ -387,16 +384,16 @@ public class Parser {
                         match(RSQUARE);
                         return new ExpressionFunctionAppWithPixel(firstToken, name, e0, e1);
                     } else {
-                        throw new SyntaxException(t, "Syntax Error: Wrong expression syntax for: " + t.getText()
-                                + " at position: " + t.posInLine() + " in line: " + t.line());
+                        throw new SyntaxException(t, String.format("Syntax Error: Wrong statement syntax for: %s at position: %s in line: %s",
+                                t.getText(), t.posInLine(), t.line()));
                     }
 
                 } else if (isKind(predefinedName)) {
                     Token name = match(t.kind);
                     return new ExpressionPredefinedName(firstToken, name);
                 } else {
-                    throw new SyntaxException(t, "Syntax Error: Wrong expression syntax for: " + t.getText()
-                            + " at position: " + t.posInLine() + " in line: " + t.line());
+                    throw new SyntaxException(t, String.format("Syntax Error: Wrong statement syntax for: %s at position: %s in line: %s",
+                            t.getText(), t.posInLine(), t.line()));
                 }
             }
         }
@@ -458,7 +455,7 @@ public class Parser {
     private Token consume() throws SyntaxException {
         Token tmp = t;
         if (isKind(EOF)) {
-            throw new SyntaxException(t, "Syntax Error: Unexpected EOF at: " + t.posInLine() + " in line: " + t.line()); // TODO
+            throw new SyntaxException(t, "Syntax Error: Unexpected EOF at: " + t.posInLine() + " in line: " + t.line());
             // give
             // a
             // better
@@ -483,7 +480,7 @@ public class Parser {
         if (isKind(EOF)) {
             return t;
         }
-        throw new SyntaxException(t, "Syntax Error"); // TODO give a better error message!
+        throw new SyntaxException(t, "Syntax Error. Not an EOF.");
     }
 
 }
