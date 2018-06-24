@@ -15,13 +15,8 @@ package cop5556sp18;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-//import java.util.HashMap;
 
 public class Scanner {
-
-    private static final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz$_";
-    private static final String NON_ZERO_DIGITS = "123456789";
-    private static final String ZERO = "0";
 
     @SuppressWarnings("serial")
     public static class LexicalException extends Exception {
@@ -283,10 +278,8 @@ public class Scanner {
 
     private enum State {
         START, IDENTIFIER, IN_DIGIT, HAS_LT, HAS_GT, HAS_COLON, HAS_EQUAL, HAS_TIMES, HAS_DIV, HAS_DOT, COMMENT_OPEN, COMMENT_CLOSE, HAS_EXCLAM, HAS_ZERO
-    }  //TODO:  this is incomplete
+    }
 
-
-    //TODO: Modify this to deal with the entire lexical specification
     public Scanner scan() throws LexicalException {
         int pos = 0;
         State state = State.START;

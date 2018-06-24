@@ -187,8 +187,6 @@ public class ScannerTest {
         Scanner scanner = new Scanner(input).scan();
         show(input);
         show(scanner);
-//        checkNext(scanner, LPAREN, 0, 1, 1, 1);
-//        checkNext(scanner, RPAREN, 1, 1, 1, 2);
         checkNextIsEOF(scanner);
     }
 
@@ -329,15 +327,14 @@ public class ScannerTest {
     @Test
     public void testFailSingleEqualChar() throws LexicalException {
         String input = ";=:;:";
-//        Scanner scanner = new Scanner(input).scan();
         show(input);
-        thrown.expect(LexicalException.class);  //Tell JUnit to expect a LexicalException
+        thrown.expect(LexicalException.class);
         try {
             new Scanner(input).scan();
         } catch (LexicalException e) {
             show(e);
-            assertEquals(1, e.getPos()); //Check that exception occurred in the expected position
-            throw e;                    //Rethrow exception so JUnit will see it
+            assertEquals(1, e.getPos());
+            throw e;
         }
     }
 
@@ -535,8 +532,8 @@ public class ScannerTest {
             new Scanner(input).scan();
         } catch (LexicalException e) {
             show(e);
-            assertEquals(0, e.getPos()); //Check that exception occurred in the expected position
-            throw e;                    //Rethrow exception so JUnit will see it
+            assertEquals(0, e.getPos());
+            throw e;
         }
     }
 
@@ -578,13 +575,13 @@ public class ScannerTest {
     public void testInvalidIdentifier() throws LexicalException {
         String input = "$abc";
         show(input);
-        thrown.expect(LexicalException.class);  //Tell JUnit to expect a LexicalException
+        thrown.expect(LexicalException.class);
         try {
             new Scanner(input).scan();
         } catch (LexicalException e) {
             show(e);
-            assertEquals(0, e.getPos()); //Check that exception occurred in the expected position
-            throw e;                    //Rethrow exception so JUnit will see it
+            assertEquals(0, e.getPos());
+            throw e;
         }
     }
 
@@ -592,13 +589,13 @@ public class ScannerTest {
     public void testInvalidIdentifierStart() throws LexicalException {
         String input = "_123";
         show(input);
-        thrown.expect(LexicalException.class);  //Tell JUnit to expect a LexicalException
+        thrown.expect(LexicalException.class);
         try {
             new Scanner(input).scan();
         } catch (LexicalException e) {
             show(e);
-            assertEquals(0, e.getPos()); //Check that exception occurred in the expected position
-            throw e;                    //Rethrow exception so JUnit will see it
+            assertEquals(0, e.getPos());
+            throw e;
         }
     }
 
@@ -606,13 +603,13 @@ public class ScannerTest {
     public void testInvalidIdentifierStartDollar() throws LexicalException {
         String input = "$123";
         show(input);
-        thrown.expect(LexicalException.class);  //Tell JUnit to expect a LexicalException
+        thrown.expect(LexicalException.class);
         try {
             new Scanner(input).scan();
         } catch (LexicalException e) {
             show(e);
-            assertEquals(0, e.getPos()); //Check that exception occurred in the expected position
-            throw e;                    //Rethrow exception so JUnit will see it
+            assertEquals(0, e.getPos());
+            throw e;
         }
     }
 
@@ -620,13 +617,13 @@ public class ScannerTest {
     public void testInvalidIdentifierUnderscore() throws LexicalException {
         String input = "123_";
         show(input);
-        thrown.expect(LexicalException.class);  //Tell JUnit to expect a LexicalException
+        thrown.expect(LexicalException.class);
         try {
             new Scanner(input).scan();
         } catch (LexicalException e) {
             show(e);
-            assertEquals(3, e.getPos()); //Check that exception occurred in the expected position
-            throw e;                    //Rethrow exception so JUnit will see it
+            assertEquals(3, e.getPos());
+            throw e;
         }
     }
 
@@ -634,13 +631,13 @@ public class ScannerTest {
     public void testInvalidIdentifierDollar() throws LexicalException {
         String input = "123$";
         show(input);
-        thrown.expect(LexicalException.class);  //Tell JUnit to expect a LexicalException
+        thrown.expect(LexicalException.class);
         try {
             new Scanner(input).scan();
         } catch (LexicalException e) {
             show(e);
-            assertEquals(3, e.getPos()); //Check that exception occurred in the expected position
-            throw e;                    //Rethrow exception so JUnit will see it
+            assertEquals(3, e.getPos());
+            throw e;
         }
     }
 
@@ -648,13 +645,13 @@ public class ScannerTest {
     public void testInvalidIdentUnderscoreMid() throws LexicalException {
         String input = "123_a";
         show(input);
-        thrown.expect(LexicalException.class);  //Tell JUnit to expect a LexicalException
+        thrown.expect(LexicalException.class);
         try {
             new Scanner(input).scan();
         } catch (LexicalException e) {
             show(e);
-            assertEquals(3, e.getPos()); //Check that exception occurred in the expected position
-            throw e;                    //Rethrow exception so JUnit will see it
+            assertEquals(3, e.getPos());
+            throw e;
         }
     }
 
@@ -662,13 +659,13 @@ public class ScannerTest {
     public void testInvalidIdentDollarMid() throws LexicalException {
         String input = "123$a";
         show(input);
-        thrown.expect(LexicalException.class);  //Tell JUnit to expect a LexicalException
+        thrown.expect(LexicalException.class);
         try {
             new Scanner(input).scan();
         } catch (LexicalException e) {
             show(e);
-            assertEquals(3, e.getPos()); //Check that exception occurred in the expected position
-            throw e;                    //Rethrow exception so JUnit will see it
+            assertEquals(3, e.getPos());
+            throw e;
         }
     }
 
@@ -680,7 +677,6 @@ public class ScannerTest {
         show(scanner);
         checkNext(scanner, IDENTIFIER, 0, 7, 1, 1);
         checkNext(scanner, IDENTIFIER, 8, 5, 1, 9);
-//        checkNext(scanner, INTEGER_LITERAL, 12, 1, 1, 13);
         checkNextIsEOF(scanner);
     }
 
@@ -692,7 +688,6 @@ public class ScannerTest {
         show(scanner);
         checkNext(scanner, IDENTIFIER, 0, 7, 1, 1);
         checkNext(scanner, IDENTIFIER, 8, 5, 1, 9);
-//        checkNext(scanner, INTEGER_LITERAL, 12, 1, 1, 13);
         checkNextIsEOF(scanner);
     }
 
@@ -901,8 +896,8 @@ public class ScannerTest {
             new Scanner(input).scan();
         } catch (LexicalException e) {
             show(e);
-            assertEquals(0, e.getPos()); //Check that exception occurred in the expected position
-            throw e;                    //Rethrow exception so JUnit will see it
+            assertEquals(0, e.getPos());
+            throw e;
         }
     }
 
@@ -947,8 +942,8 @@ public class ScannerTest {
             new Scanner(input).scan();
         } catch (LexicalException e) {
             show(e);
-            assertEquals(0, e.getPos()); //Check that exception occurred in the expected position
-            throw e;                    //Rethrow exception so JUnit will see it
+            assertEquals(0, e.getPos());
+            throw e;
         }
     }
 
