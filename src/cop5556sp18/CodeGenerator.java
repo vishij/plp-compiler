@@ -95,14 +95,11 @@ public class CodeGenerator implements ASTVisitor, Opcodes {
             } else {
                 declaration.width.visit(this, arg);
                 declaration.height.visit(this, arg);
-//				mv.visitMethodInsn(INVOKESTATIC, RuntimeImageSupport.className, "makeImage",
-//						RuntimeImageSupport.makeImageSig, itf);
             }
             mv.visitMethodInsn(INVOKESTATIC, RuntimeImageSupport.className, "makeImage",
                     RuntimeImageSupport.makeImageSig, itf);
             mv.visitVarInsn(ASTORE, declaration.slotNumber);
         } else if (type.equals(Type.INTEGER) || type.equals(Type.FLOAT) || type.equals(Type.BOOLEAN) || type.equals(Type.FILE)) {
-//			mv.visitLdcInsn(new Integer(0));
             mv.visitInsn(ACONST_NULL);
             mv.visitVarInsn(ASTORE, declaration.slotNumber);
         }
@@ -388,7 +385,6 @@ public class CodeGenerator implements ASTVisitor, Opcodes {
             }
 
         } else if (fxn.equals(Scanner.Kind.KW_int)) {
-//            System.out.println("f2i");
             if (type.equals(Type.FLOAT)) {
                 mv.visitInsn(F2I);
             }
@@ -421,14 +417,12 @@ public class CodeGenerator implements ASTVisitor, Opcodes {
             mv.visitInsn(D2F);
             mv.visitInsn(FMUL);
             mv.visitInsn(F2I);
-//            mv.visitMethodInsn(INVOKESTATIC, "java/lang/Math", "round", "(F)I", itf);
         } else if (fxn.equals(Scanner.Kind.KW_cart_y)) {
             mv.visitInsn(F2D);
             mv.visitMethodInsn(INVOKESTATIC, "java/lang/Math", "sin", "(D)D", itf);
             mv.visitInsn(D2F);
             mv.visitInsn(FMUL);
             mv.visitInsn(F2I);
-//            mv.visitMethodInsn(INVOKESTATIC, "java/lang/Math", "round", "(F)I", itf);
         } else if (fxn.equals(Scanner.Kind.KW_polar_a)) {
             mv.visitInsn(POP);
             mv.visitInsn(POP);
@@ -513,7 +507,6 @@ public class CodeGenerator implements ASTVisitor, Opcodes {
     @Override
     public Object visitExpressionPredefinedName(ExpressionPredefinedName expressionPredefinedName, Object arg)
             throws Exception {
-        // TODO: check if correct
         if (expressionPredefinedName.name.equals(Kind.KW_Z)) {
             mv.visitLdcInsn(Z);
         } else if (expressionPredefinedName.name.equals(Kind.KW_default_height)) {
@@ -570,7 +563,6 @@ public class CodeGenerator implements ASTVisitor, Opcodes {
 
     @Override
     public Object visitLHSPixel(LHSPixel lhsPixel, Object arg) throws Exception {
-//    		System.out.println(lhsPixel.type);
         mv.visitVarInsn(ALOAD, lhsPixel.declaration.slotNumber);
         if (lhsPixel.pixelSelector.ex.type.equals(Type.INTEGER)) {
             lhsPixel.pixelSelector.visit(this, arg);
@@ -591,17 +583,14 @@ public class CodeGenerator implements ASTVisitor, Opcodes {
             mv.visitInsn(FMUL);
             mv.visitInsn(F2I);
         }
-//        lhsPixel.pixelSelector.visit(this, arg);
         mv.visitMethodInsn(INVOKESTATIC, RuntimeImageSupport.className, "setPixel", RuntimeImageSupport.setPixelSig,
                 itf);
-//    		mv.visitVarInsn(ISTORE, lhsPixel.declaration.slotNumber);
         return null;
     }
 
     @Override
     public Object visitLHSSample(LHSSample lhsSample, Object arg) throws Exception {
         mv.visitVarInsn(ALOAD, lhsSample.declaration.slotNumber);
-//        lhsSample.pixelSelector.visit(this, arg);
         if (lhsSample.pixelSelector.ex.type.equals(Type.INTEGER)) {
             lhsSample.pixelSelector.visit(this, arg);
         }
@@ -642,7 +631,6 @@ public class CodeGenerator implements ASTVisitor, Opcodes {
         return null;
     }
 
-    // TODO: check if done completely
     @Override
     public Object visitProgram(Program program, Object arg) throws Exception {
         // TODO refactor and extend as necessary
@@ -703,7 +691,6 @@ public class CodeGenerator implements ASTVisitor, Opcodes {
         return cw.toByteArray();
     }
 
-    // TODO: check resize issue
     @Override
     public Object visitStatementAssign(StatementAssign statementAssign, Object arg) throws Exception {
         statementAssign.e.visit(this, arg);
@@ -741,12 +728,10 @@ public class CodeGenerator implements ASTVisitor, Opcodes {
                 mv.visitTypeInsn(NEW, "java/lang/Integer");
                 mv.visitInsn(DUP);
                 statementInput.declaration.width.visit(this, arg);
-//				mv.visitInsn(ACONST_NULL);
                 mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Integer", "<init>", "(I)V", itf);
                 mv.visitTypeInsn(NEW, "java/lang/Integer");
                 mv.visitInsn(DUP);
                 statementInput.declaration.height.visit(this, arg);
-//				mv.visitInsn(ACONST_NULL);
                 mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Integer", "<init>", "(I)V", itf);
             } else {
                 mv.visitInsn(ACONST_NULL);
@@ -836,21 +821,6 @@ public class CodeGenerator implements ASTVisitor, Opcodes {
         mv.visitMethodInsn(INVOKESTATIC, RuntimeImageSupport.className, "write",
                 RuntimeImageSupport.writeSig, itf);
         return null;
-    }
-
-    private String getJVMType(Type type) {
-        if (type.equals(Type.INTEGER))
-            return "I";
-        if (type.equals(Type.FLOAT))
-            return "F";
-        if (type.equals(Type.BOOLEAN))
-            return "Z";
-        if (type.equals(Type.IMAGE))
-            return "Ljava/awt/image/BufferedImage;";
-        if (type.equals(Type.FILE))
-            return "Ljava/lang/String;";
-
-        return "";
     }
 
 }

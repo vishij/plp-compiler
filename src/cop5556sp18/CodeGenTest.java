@@ -1307,23 +1307,23 @@ public class CodeGenTest {
         show("Log:\n" + RuntimeLog.globalLog);
         assertEquals("entering main;5;4;3;2;1;0;leaving main;", RuntimeLog.globalLog.toString());
     }
-    
-//    @Test
+
+    //    @Test
     public void statementWhile1() throws Exception {
         String prog = "stmtWhile";
-        String input = prog + "{int x; \r\n" + 
-        		"x := 2; \r\n" + 
-        		"image c; \r\n" + 
-        		"while(x != 0)\r\n" + 
-        		"{\r\n" + 
-        		"show c;\r\n" + 
-        		"int c;\r\n" + 
-        		"c := 4;\r\n" + 
-        		"c := c + x;\r\n" +
-        		"show c;\r\n" + 
-        		"x := x - 1;\r\n" +
-        		"}; \r\n" + 
-        		"show x; } ";
+        String input = prog + "{int x; \r\n" +
+                "x := 2; \r\n" +
+                "image c; \r\n" +
+                "while(x != 0)\r\n" +
+                "{\r\n" +
+                "show c;\r\n" +
+                "int c;\r\n" +
+                "c := 4;\r\n" +
+                "c := c + x;\r\n" +
+                "show c;\r\n" +
+                "x := x - 1;\r\n" +
+                "}; \r\n" +
+                "show x; } ";
         byte[] bytecode = genCode(input);
         String[] commandLineArgs = {"success"};
         runCode(prog, bytecode, commandLineArgs);
@@ -1353,7 +1353,7 @@ public class CodeGenTest {
         assertEquals("entering main;0;leaving main;", RuntimeLog.globalLog.toString());
     }
 
-//    @Test
+    //    @Test
     public void testExpressionPixel() throws Exception {
         String prog = "exprPixel";
         String input = prog + "{image a; input a from @0; show a[0, 2];}";
@@ -1364,7 +1364,7 @@ public class CodeGenTest {
         assertEquals("entering main;-526345;leaving main;", RuntimeLog.globalLog.toString());
     }
 
-//    @Test
+    //    @Test
     public void testExpressionPixelFloat() throws Exception {
         String prog = "exprPixel";
         String input = prog + "{image a; input a from @0; show a[2.236068, 1.1071488];}";
@@ -1375,7 +1375,7 @@ public class CodeGenTest {
         assertEquals("entering main;-526345;leaving main;", RuntimeLog.globalLog.toString());
     }
 
-//    @Test
+    //    @Test
     public void expressionPixelSelectorFloat1() throws Exception {
         String prog = "prog";
         String input = prog + "{image a; input a from @ 0; a[polar_r[2, 2], polar_a[2, 2]] := a[polar_r[2, 2], polar_a[2, 2]]; show a[2,2]; }";
@@ -1526,19 +1526,19 @@ public class CodeGenTest {
         show("Log:\n" + RuntimeLog.globalLog);
         assertEquals("entering main;0;leaving main;", RuntimeLog.globalLog.toString());
     }
-    
+
     @Test
-	public void testRandom() throws Exception {
-		String prog = "testExpressionPixel1";
-		String input =  prog + "{boolean showImage; showImage := true; image c; input c from @0; if(showImage){ show c; sleep(4000);  }; }";
-		byte[] bytecode = genCode(input);		
-		String[] commandLineArgs = {"https://d2droglu4qf8st.cloudfront.net/2016/05/282829/Marbled-Hazelnut-Brownie-Cheesecake-for-a-Crowd_Large400_ID-1680086.jpg"};		
-		runCode(prog, bytecode, commandLineArgs);
-		show("Log:\n"+RuntimeLog.globalLog);
-		//assertEquals("entering main;-13100275;leaving main;",RuntimeLog.globalLog.toString());
-	}
-    
-    
+    public void testRandom() throws Exception {
+        String prog = "testExpressionPixel1";
+        String input = prog + "{boolean showImage; showImage := true; image c; input c from @0; if(showImage){ show c; sleep(4000);  }; }";
+        byte[] bytecode = genCode(input);
+        String[] commandLineArgs = {"https://d2droglu4qf8st.cloudfront.net/2016/05/282829/Marbled-Hazelnut-Brownie-Cheesecake-for-a-Crowd_Large400_ID-1680086.jpg"};
+        runCode(prog, bytecode, commandLineArgs);
+        show("Log:\n" + RuntimeLog.globalLog);
+        //assertEquals("entering main;-13100275;leaving main;",RuntimeLog.globalLog.toString());
+    }
+
+
     public static void dummy(String args[]) {
         int a;
         a = 2 > 3 ? 1 : 0;
