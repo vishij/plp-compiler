@@ -91,7 +91,7 @@ public class TypeChecker implements ASTVisitor {
         statementWrite.sourceDeclaration = symbolTable.lookup(statementWrite.sourceName);
         System.out.println("sourceDec: " + statementWrite.sourceDeclaration);
         if (statementWrite.sourceDeclaration != null) {
-        	statementWrite.destDeclaration = symbolTable.lookup(statementWrite.destName);
+            statementWrite.destDeclaration = symbolTable.lookup(statementWrite.destName);
             if (statementWrite.destDeclaration != null) {
                 if (statementWrite.sourceDeclaration.type != Kind.KW_image) {
                     throw new SemanticException(firstToken,
@@ -206,14 +206,14 @@ public class TypeChecker implements ASTVisitor {
                 }
                 break;
             case OP_MOD:
-            	if (leftExprType == Type.INTEGER && rightExprType == Type.INTEGER) {
+                if (leftExprType == Type.INTEGER && rightExprType == Type.INTEGER) {
                     inferredType = Type.INTEGER;
                 } else {
                     throw new SemanticException(firstToken, String.format(
                             "Line: %s Pos: %s \t Error: Incompatible types around operator. Allowed only integer",
                             firstToken.line(), firstToken.posInLine()));
                 }
-            	break;
+                break;
             case OP_AND:
             case OP_OR:
                 if (leftExprType == Type.INTEGER && rightExprType == Type.INTEGER) {
@@ -255,35 +255,34 @@ public class TypeChecker implements ASTVisitor {
 
     @Override
     public Object visitExpressionUnary(ExpressionUnary expressionUnary, Object arg) throws Exception {
-    	Token firstToken = expressionUnary.firstToken;
+        Token firstToken = expressionUnary.firstToken;
         expressionUnary.expression.visit(this, arg);
         // exception not thrown as expression can be anything
         Type type = expressionUnary.expression.type;
-//        expressionUnary.type = expressionUnary.expression.type;
         switch (expressionUnary.op) {
-        case OP_PLUS:
-        case OP_MINUS:
-        	if (type == Type.INTEGER || type == Type.FLOAT) {
-        		expressionUnary.type = type;
-            } else {
-            	throw new SemanticException(firstToken, String.format(
-                        "Line: %s Pos: %s \t Error: Incompatible type for the Unaryoperator. Allowed only integer and float",
+            case OP_PLUS:
+            case OP_MINUS:
+                if (type == Type.INTEGER || type == Type.FLOAT) {
+                    expressionUnary.type = type;
+                } else {
+                    throw new SemanticException(firstToken, String.format(
+                            "Line: %s Pos: %s \t Error: Incompatible type for the Unaryoperator. Allowed only integer and float",
+                            firstToken.line(), firstToken.posInLine()));
+                }
+                break;
+            case OP_EXCLAMATION:
+                if (type == Type.INTEGER || type == Type.BOOLEAN) {
+                    expressionUnary.type = type;
+                } else {
+                    throw new SemanticException(firstToken, String.format(
+                            "Line: %s Pos: %s \t Error: Incompatible type for the Unaryoperator. Allowed only integer and boolean",
+                            firstToken.line(), firstToken.posInLine()));
+                }
+                break;
+            default:
+                throw new SemanticException(firstToken, String.format(
+                        "Line: %s Pos: %s \t Error BinaryExpression: Invalid or Incompatible type around Unary operator.",
                         firstToken.line(), firstToken.posInLine()));
-            }
-        	break;
-        case OP_EXCLAMATION:
-        	if (type == Type.INTEGER || type == Type.BOOLEAN) {
-        		expressionUnary.type = type;
-            } else {
-            	throw new SemanticException(firstToken, String.format(
-                        "Line: %s Pos: %s \t Error: Incompatible type for the Unaryoperator. Allowed only integer and boolean",
-                        firstToken.line(), firstToken.posInLine()));
-            }
-        	 break;
-        default:
-            throw new SemanticException(firstToken, String.format(
-                    "Line: %s Pos: %s \t Error BinaryExpression: Invalid or Incompatible type around Unary operator.",
-                    firstToken.line(), firstToken.posInLine()));
         }
         return null;
     }

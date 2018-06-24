@@ -504,7 +504,7 @@ public class TypeCheckerTest {
             throw e;
         }
     }
-    
+
     @Test
     public void testinvalidExpressionBinary1() throws Exception {
         String input = "prog{ show (1.0 % 2.0);}";
@@ -516,7 +516,7 @@ public class TypeCheckerTest {
             throw e;
         }
     }
-    
+
     @Test
     public void testinvalidExpressionBinary2() throws Exception {
         String input = "prog{ show (1 % 2.0);}";
