@@ -20,7 +20,6 @@ public class SymbolTable {
     }
 
     public void enterScope() {
-        // scopeCounter = scopeCounter++;
         scopeStack.push(++currentScope);
     }
 
